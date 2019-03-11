@@ -1,0 +1,166 @@
+//a连接颜色
+$linkColor: #ff6700;
+$linkHoverColor:lightgreen;
+
+//字体颜色
+$fontColorLight:lightgray;
+$fontColorDark:gray;
+
+//字体大小
+$xxSmall:12px;
+$xSmall:14px;
+$normal:16px;
+$xLarger:18px;
+$xxLarger:20px;
+
+//度量值
+$metric:3px;
+
+/*计算padding*/
+@function height($times) {
+  @return $metric*$times;
+}
+
+
+.linkColor {
+  color: $linkColor
+}
+.linkHover a:hover{
+  color:$linkHoverColor;
+}
+
+.fontColorLight{
+  color:$fontColorLight
+}
+.fontColorDark{
+  color: $fontColorDark;
+}
+
+.xxSmall{
+  font-size:$xxSmall
+}
+.xSmall{
+  font-size: $xSmall;
+}
+
+.normal{
+  font-size: $normal;
+}
+.xLarger{
+  font-size: $xLarger;
+}
+.xxLarger{
+  font-size: $xxLarger;
+}
+
+.padding-left-3{
+  padding-left: height(3);
+}
+.padding-left-4{
+  padding-left: height(4);
+}
+.padding-left-6{
+  padding-left: height(6);
+}
+
+
+.padding-right-3{
+  padding-right: height(3);
+}
+.padding-right-4{
+  padding-right: height(4);
+}
+.padding-right-6{
+  padding-right: height(6);
+}
+
+.padding-top-3{
+  padding-top: height(3);
+}
+.padding-top-4{
+  padding-top: height(4);
+}
+.padding-top-6{
+  padding-top: height(6);
+}
+
+.padding-bottom-1{
+  padding-bottom: height(1);
+}
+.padding-bottom-3{
+  padding-bottom: height(3);
+}
+.padding-bottom-4{
+  padding-bottom: height(4);
+}
+.padding-bottom-6{
+  padding-bottom: height(6);
+}
+
+
+.margin-left-3{
+  margin-left: height(3);
+}
+.margin-left-4{
+  margin-left: height(4);
+}
+.margin-left-6{
+  margin-left: height(6);
+}
+
+
+.margin-right-3{
+  margin-right: height(3);
+}
+.margin-right-4{
+  margin-right: height(4);
+}
+.margin-right-6{
+  margin-right: height(6);
+}
+.margin-top-1{
+  margin-top: height(1);
+}
+.margin-top-3{
+  margin-top: height(3);
+}
+.margin-top-4{
+  margin-top: height(4);
+}
+.margin-top-6{
+  margin-top: height(6);
+}
+.margin-top-10{
+  margin-top: height(10);
+}
+.margin-top-20{
+  margin-top: height(20);
+}
+
+.margin-bottom-1{
+  margin-bottom: height(1);
+}
+.margin-bottom-3{
+  margin-bottom: height(3);
+}
+.margin-bottom-4{
+  margin-bottom: height(4);
+}
+.margin-bottom-6{
+  margin-bottom: height(6);
+}
+.margin-bottom-10{
+  margin-bottom: height(10);
+}
+.margin-bottom-20{
+  margin-bottom: height(20);
+}
+
+
+
+
+
+
+
+
+

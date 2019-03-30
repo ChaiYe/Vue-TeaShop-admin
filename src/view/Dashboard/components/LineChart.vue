@@ -19,6 +19,15 @@
             ]
           }
         }
+      },
+      methods:{
+          queryStatistical(){
+            this.$http.get(this.HOST+"/sys/statistical/statisticalData").then(res=>{
+              console.log(res.data);
+            }).catch(err=>{
+              console.log(err);
+            });
+          }
       }
     }
 </script>

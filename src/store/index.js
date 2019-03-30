@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import user from './modules/user'
 import permission from './modules/permission'
+import orderData from './modules/orderData'
+import  goodsData  from  './modules/goodsData'
+import  commentData  from './modules/commentData'
 import getters from './getters'
 
 Vue.use(Vuex)
@@ -9,7 +12,10 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   modules: {
     user,
-    permission
+    permission,
+    orderData,
+    goodsData,
+    commentData,
   },
   getters
 })

@@ -263,7 +263,7 @@
         requestBrandList() {
           this.$http.get(this.HOST + "/sys/brand/find2Selection?type="+this.product.type).then((res)=>{
             console.log(res);
-            console.log("品牌返回消息")
+            console.log("品牌返回消息");
             this.brandList=res.data;
           });
 
@@ -359,8 +359,23 @@
             fileInput.click() //加一个触发事件
           }
         }
-        vm.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler)
-      }
+        vm.$refs.newEditor.quill.getModule("toolbar").addHandler("image", imgHandler);
+
+        let id = this.$route.params.id;
+        if (id != ':id') {
+          this.$http.get(this.HOST + "/sys/goods/getGoods?goodsId=" + id).then(res=>{
+
+            console.log(res.data);
+            this.product=res.data;
+            }).catch(err=>{
+            console.log(err);
+          });
+        }
+
+
+
+
+      },
     }
 </script>
 

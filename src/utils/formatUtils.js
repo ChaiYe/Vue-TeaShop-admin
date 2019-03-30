@@ -8,3 +8,10 @@ export function dateFormat(row, column) {
   }
   return moment(date).format("YYYY-MM-DD HH:mm:ss");
 }
+
+export function dateFormatType2(date) {
+  if (date == undefined) {
+    return "";
+  }
+  return moment(date).format("YYYY-MM-DD");
+}

@@ -6,6 +6,9 @@ const getters = {
   user: state => state.user.user,
   menus: state => state.user.menus,
   menu: state => state.permission.routers,
-  apiRouters: state => state.permission.apiRouters
+  apiRouters: state => state.permission.apiRouters,
+  orderdata:state=>state.orderData.datamsg,
+  goodsData:state=>state.goodsData.goodsData,
+  commentData:state=>state.commentData.commentData
 }
 export default getters

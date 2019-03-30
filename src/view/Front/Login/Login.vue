@@ -1,9 +1,9 @@
 <template>
-  <div class="login v2">
-    <div class="wrapper">
+  <div class="loginPage v2">
+    <div class="wrapper" style="background: url('/static/img/loginbg.jpg');">
       <div class="dialog dialog-shadow" style="display: block; margin-top: -362px;">
         <div class="title">
-          <h4>使用 百草商城 账号 登录官网</h4>
+          <h4>使用 百草商城 账号 登录</h4>
         </div>
         <div v-if="loginPage" class="content">
           <ul class="common-form">
@@ -17,8 +17,12 @@
                 <el-input type="password" v-model="ruleForm.userPwd" @keyup.enter="login" placeholder="密码"></el-input>
               </div>
             </li>
+            <li>
+              <div id="captcha">
+                <Verify @success="verifySuccess" @error="alert('error')" :type="3" :showButton="false" :barSize="{width:'100%',height:'40px'}"></Verify>
+              </div>
+            </li>
             <li style="text-align: right" class="pr">
-              <el-checkbox class="auto-login" v-model="autoLogin">记住密码</el-checkbox>
               <a href="javascript:;" class="register" @click="toRegister">注册 TeaMall 账号</a>
               <a style="padding: 1px 0 0 10px" @click="open('找回密码','请联系管理员')">忘记密码 ?</a>
             </li>
@@ -40,15 +44,12 @@
 </template>
 
 <script>
-/*  import YFooter from '/common/footer'
-  import YButton from '/components/YButton'
-  import { userLogin, geetest } from '/api/index.js'
-  import { addCart } from '/api/goods.js'
-  import { setStore, getStore, removeStore } from '/utils/storage.js'*/
 
+import Verify from 'vue2-verify'
   export default {
     data () {
       return {
+        verifyStatus:false,
         cart: [],
         loginPage: true,
         ruleForm: {
@@ -67,10 +68,11 @@
         statusKey: ''
       }
     },
+
     computed: {
       count () {
         return this.$store.state.login
-      }
+      },
     },
     methods: {
       open (t, m) {
@@ -90,143 +92,66 @@
           message: m
         })
       },
-      getRemembered () {
-        var judge = getStore('remember')
-        if (judge === 'true') {
-          this.autoLogin = true
-          this.ruleForm.userName = getStore('rusername')
-          this.ruleForm.userPwd = getStore('rpassword')
-        }
-      },
-      rememberPass () {
-        if (this.autoLogin === true) {
-          setStore('remember', 'true')
-          setStore('rusername', this.ruleForm.userName)
-          setStore('rpassword', this.ruleForm.userPwd)
-        } else {
-          setStore('remember', 'false')
-          removeStore('rusername')
-          removeStore('rpassword')
-        }
-      },
       toRegister () {
         this.$router.push({
-          path: '/register'
+          path: '/front/register'
         })
       },
       // 登录返回按钮
       login_back () {
         this.$router.go(-1)
       },
-      // 登陆时将本地的添加到用户购物车
-      login_addCart () {
-        let cartArr = []
-        let locaCart = JSON.parse(getStore('buyCart'))
-        if (locaCart && locaCart.length) {
-          locaCart.forEach(item => {
-            cartArr.push({
-              userId: getStore('userId'),
-              productId: item.productId,
-              productNum: item.productNum
-            })
-          })
-        }
-        this.cart = cartArr
-      },
+
       login () {
-        this.logintxt = '登录中...'
-        this.rememberPass()
-        if (!this.ruleForm.userName || !this.ruleForm.userPwd) {
-          // this.ruleForm.errMsg = '账号或者密码不能为空!'
-          this.message('账号或者密码不能为空!')
-          return false
-        }
-        var result = captcha.getValidate()
-        if (!result) {
-          this.message('请完成验证')
-          this.logintxt = '登录'
-          return false
-        }
-        var params = {
-          userName: this.ruleForm.userName,
-          userPwd: this.ruleForm.userPwd,
-          challenge: result.geetest_challenge,
-          validate: result.geetest_validate,
-          seccode: result.geetest_seccode,
-          statusKey: this.statusKey
-        }
-        userLogin(params).then(res => {
-          if (res.result.state === 1) {
-            setStore('token', res.result.token)
-            setStore('userId', res.result.id)
-            // 登录后添加当前缓存中的购物车
-            if (this.cart.length) {
-              for (var i = 0; i < this.cart.length; i++) {
-                addCart(this.cart[i]).then(res => {
-                  if (res.success === true) {
-                  }
-                })
-              }
-              removeStore('buyCart')
-              this.$router.push({
-                path: '/'
-              })
-            } else {
-              this.$router.push({
-                path: '/'
-              })
-            }
-          } else {
-            this.logintxt = '登录'
-            this.message(res.result.message)
-            captcha.reset()
+        if(this.verifyStatus){
+          this.logintxt = '登录中...'
+          if (!this.ruleForm.userName || !this.ruleForm.userPwd) {
+            // this.ruleForm.errMsg = '账号或者密码不能为空!'
+            this.message('账号或者密码不能为空!')
             return false
           }
-        })
-      },
-      init_geetest () {
-        geetest().then(res => {
-          this.statusKey = res.statusKey
-          window.initGeetest({
-            gt: res.gt,
-            challenge: res.challenge,
-            new_captcha: res.new_captcha,
-            offline: !res.success,
-            product: 'popup',
-            width: '100%'
-          }, function (captchaObj) {
-            captcha = captchaObj
-            captchaObj.appendTo('#captcha')
-            captchaObj.onReady(function () {
-              document.getElementById('wait').style.display = 'none'
-            })
+
+          var params = {
+            nickname: this.ruleForm.userName,
+            password: this.ruleForm.userPwd,
+          }
+          this.$http.post(this.HOST+"/sys/userLogin/login",params).then(res => {
+            console.log(res);
+            localStorage.setItem('token', res.data.data);
+            this.$router.push({
+              path: '/front'
+            });
           })
-        })
+        }else{
+          this.$message("请先验证验证码");
+        }
+
+      },
+      verifySuccess() {
+        this.verifyStatus = true;
       }
     },
     mounted () {
-      this.getRemembered()
-      this.login_addCart()
-      this.init_geetest()
-      this.open('登录提示', '测试体验账号密码：test | test')
     },
-    components: {
 
-    }
+    components: {
+      Verify
+    },
   }
 </script>
 <style lang="scss" rel="stylesheet/scss" scoped>
-
-  a{
+  a {
     text-decoration: none;
-    color:#cccccc;
+    color: #ccc;
   }
-
   * {
     box-sizing: content-box;
   }
 
-  .login {
+  .loginPage {
+    /*background: #ebf2e1;*/
+
+
     overflow-x: hidden;
     overflow-y: hidden;
     .input {
@@ -244,7 +169,6 @@
       }
     }
     .wrapper {
-
       background-size: 100px;
       min-height: 800px;
       min-width: 630px;
@@ -259,14 +183,15 @@
     left: 50%;
     margin-left: -225px;
     position: absolute;
+    background: #fff;
     .title {
+      background-image: url("/static/img/logo.png");
       height: auto;
       overflow: visible;
       box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
       position: relative;
-
       background-size: 140px;
-      background-position: top center;
+      background-position: 150px center;
       background-repeat: no-repeat;
       height: 92px;
       margin: 23px 0 50px;
@@ -311,10 +236,10 @@
   }
 
 
-
   @media screen and (min-width: 737px),
   screen and (-webkit-max-device-pixel-ratio: 1.9) and (max-width: 736px) and (min-device-width: 737px) {
     .wrapper {
+
       position: absolute;
       top: 0;
       bottom: 0;
@@ -397,6 +322,9 @@
     text-align: left;
     color: #999;
     margin: 0;
+  }
+  li{
+    list-style: none;
   }
 
 </style>

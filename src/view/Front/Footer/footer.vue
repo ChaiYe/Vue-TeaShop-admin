@@ -1,5 +1,5 @@
 <template>
-  <el-row style="padding: 42px 32px 32px;background-color: #eee">
+  <el-row style="padding: 42px 32px 32px;background-color: #eee;margin: 0px">
     <el-row style="padding: 0 0 32px;" type="flex" align="middle">
     <el-col :span="18">
       <el-row :gutter="10" type="flex ">
@@ -58,7 +58,7 @@
     </el-col>
     <el-col :span="6">
       <el-row type="flex" justify="center">
-        <el-col offset="2">
+        <el-col >
           <div style="font-size: x-large;margin-bottom: 12px">15768726472</div>
           <div style="font-size:small;color:#ccc;margin-bottom: 12px">周一到周日10:00-23:00</div>
           <el-button type="primary" >在线帮助</el-button>
@@ -105,7 +105,7 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style lang="scss">
-  @import "../assets/css/custom.scss";
+  @import "../../../assets/css/custom";
   dl {
     font-size: 12px;
     dt{

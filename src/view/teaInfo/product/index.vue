@@ -181,6 +181,12 @@
       },
 
       methods: {
+
+        showEdit(index, row){
+          this.$router.push("/system/add/"+row.id);
+          console.log(index);
+          console.log(row);
+        },
           /*选择发生变化*/
         handleSelectionChange(val) {
           console.log(val);
@@ -249,8 +255,8 @@
           })*/
           window.location.href=this.HOST+"/sys/goods/exportExcel"
         }
-
       },
+
 
       mounted() {
         this.search();

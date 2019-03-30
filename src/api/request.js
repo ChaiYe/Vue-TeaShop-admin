@@ -7,6 +7,21 @@ const service = axios.create({
   timeout: 7000
 });
 
+service.interceptors.request.use((request) => {
+  console.log(request);
+  let token = localStorage.getItem("token");
+  console.log("token is  "+token);
+  if (token) {
+    request.headers.Authorization = `Bearer ${token}`;
+  }
+  //再发送给后台
+  return request;
+
+}, function (error) {
+  // Do something with request error
+  return Promise.reject(error);
+});
+/*
 service.interceptors.request.use(
   config => {
     if (store.getters.token) {//获取存储的token
@@ -20,9 +35,10 @@ service.interceptors.request.use(
     Promise.reject(error);
   }
 )
+*/
 
 
-service.interceptors.response.use(
+/*service.interceptors.response.use(
   response=>{
   //如果返回有token则为设置成新的token
   if(response.headers.newtoken){
@@ -30,7 +46,7 @@ service.interceptors.response.use(
   }
     const res = response.data;
     if (res.code !== 200) {
-      /*设置ElementUI弹出框信息*/
+      /!*设置ElementUI弹出框信息*!/
       Message({
         message: res.msg,
         type: 'error',
@@ -68,7 +84,7 @@ service.interceptors.response.use(
   error => {
     return Promise.reject('服务不可用，请重新再试');
   }
-);
+);*/
 
 
 export default service

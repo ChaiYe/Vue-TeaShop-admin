@@ -1,12 +1,48 @@
 <template>
     <div>
+      <el-row>
+        <el-dialog :visible.sync="dialogVisible">
+        <el-form ref="adminForm" :model="adminForm"  :rules="adminRules" label-width="80px" >
+          <el-form-item label="账号" prop="account">
+            <el-input v-model="adminForm.account" placeholder="账号"></el-input>
+          </el-form-item>
+          <el-form-item label="密码" prop="password" v-if="type=='新建'">
+            <el-input type="password" v-model="adminForm.password" placeholder="密码"></el-input>
+          </el-form-item>
+          <el-form-item label="确认密码" prop="checkPassword" v-if="type=='新建'">
+            <el-input  type="password" v-model="adminForm.checkPassword" placeholder="请再次输入密码"></el-input>
+          </el-form-item>
+          <el-form-item label="昵称" prop="nickname">
+            <el-input v-model="adminForm.nickname" placeholder="昵称"></el-input>
+          </el-form-item>
+          <el-form-item label="姓名" prop="name">
+            <el-input v-model="adminForm.name" placeholder="姓名"></el-input>
+          </el-form-item>
+          <el-form-item label="性别" prop="gender">
+            <el-radio-group v-model="adminForm.gender">
+              <el-radio :label="1">男</el-radio>
+              <el-radio :label="2">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item label="类别" prop="type">
+            <el-radio-group v-model="adminForm.type">
+              <el-radio :label="0">超级管理员</el-radio>
+              <el-radio :label="1">管理员</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="editForm('adminForm')" v-if="type=='编辑'">修改</el-button>
+            <el-button type="primary" @click="submitForm('adminForm')" v-if="type=='新建'">提交</el-button>
+            <el-button @click="resetForm('adminForm')" v-if="type=='新建'">重置</el-button>
+          </el-form-item>
+        </el-form>
+          {{adminForm}}
+        </el-dialog>
+      </el-row>
       <el-row class="header">
         <el-col :span="22" >
           <el-form :inline="true" :model="administrator">
             <el-row justify="start">
-            <el-form-item>
-              <el-input v-model="administrator.account" placeholder="账号"></el-input>
-            </el-form-item>
             <el-form-item>
               <el-input v-model="administrator.nickname" placeholder="昵称"></el-input>
             </el-form-item>
@@ -21,8 +57,8 @@
             </el-form-item>
             <el-form-item >
               <el-select v-model="administrator.type" placeholder="类别">
-                <el-option label="超级管理员" value="1"></el-option>
-                <el-option label="管理员" value="0"></el-option>
+                <el-option label="超级管理员" value="0"></el-option>
+                <el-option label="管理员" value="1"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
@@ -63,31 +99,9 @@
             label="账号">
           </el-table-column>
           <el-table-column
-            prop="password"
-            label="密码">
-          </el-table-column>
-          <el-table-column
             prop="type"
             label="类型"
           :formatter="formatType">
-          </el-table-column>
-          <el-table-column
-            prop="addTime"
-            label="添加时间"
-          :formatter="formateDateTime">
-          </el-table-column>
-          <el-table-column
-            prop="addAdminId"
-            label="添加人Id">
-          </el-table-column>
-          <el-table-column
-            prop="modifyTime"
-            label="修改时间"
-            :formatter="formateModifyTime">
-          </el-table-column>
-          <el-table-column
-            prop="modifyAdminId"
-            label="修改人工号">
           </el-table-column>
           <el-table-column label="操作">
             <template slot-scope="scope">
@@ -123,49 +137,151 @@
     export default {
         name: "index",
       data() {
+        var validatePass = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请输入密码'));
+          } else {
+            if (this.adminForm.checkPassword !== '') {
+              this.$refs.adminForm.validateField('checkPassword');
+            }
+            callback();
+          }
+        };
+        var validatePass2 = (rule, value, callback) => {
+          if (value === '') {
+            callback(new Error('请再次输入密码'));
+          } else if (value !== this.adminForm.password) {
+            callback(new Error('两次输入密码不一致!'));
+          } else {
+            callback();
+          }
+        };
         return {
           AdministratorList: [],
-          user: {
-            account: '',
-            nickname: '',
-            name:'',
-            gender:'',
-            type:''
+          administrator: {
+            nickname: null,
+            name:null,
+            gender:null,
+            type:null
           },
+          type:'添加',
+          dialogVisible:false,
           pageSizesList: [10, 15, 20, 30, 50],
           currentPage: 1,
           pageSize:10,
           total:0,
-
+          adminForm:{
+            id:'',
+            account:'',
+            password:'',
+            checkPassword:'',
+            nickname:'',
+            name:'',
+            gender:'',
+            type:''
+          },
+          adminRules:{
+            account:[
+              {required:true,message:'请输入账号',trigger:'blur'},
+            ],
+            nickname:[
+              {required:true,message:'请输入昵称',trigger:'blur'},
+              {min:2,max:10,message:'长度在2到10个字符',trigger:'blur'}
+            ],
+            name:[
+              {required:true,message:'请输入姓名',trigger:'blur'},
+              {min:2,max:10,message:'长度在2到10个字符',trigger:'blur'}
+            ],
+            gender:[
+              {required:true,message:'请选择性别',trigger:'change'}
+            ],
+            type:[
+              {required:true,message:'请选择类别',trigger:'change'}
+            ],
+            password: [
+              { validator: validatePass, trigger: 'blur' }
+            ],
+            checkPassword: [
+              { validator: validatePass2, trigger: 'blur' }
+            ],
+          }
         }
       },
       methods: {
+        submitForm(formName) {
+          console.log(this.adminForm.account);
+          this.$refs[formName].validate((valid) => {
+            if (valid) {
+              axios.post(this.HOST+"/sys/admin/add",{
+                account:this.adminForm.account,
+                password:this.adminForm.password,
+                nickname:this.adminForm.nickname,
+                name:this.adminForm.name,
+                gender:this.adminForm.gender,
+                type:this.adminForm.type
+              }).then((response)=> {
+               this.dialogVisible=false;
+                this.request();
+              }).catch((error)=> {
+                console.log(error);
+              });
+            } else {
+              console.log('error submit!!');
+              return false;
+            }
+          });
+        },
+        editForm(formName){
+          this.$refs[formName].validate((valid) => {
+            if(valid){
+              axios.post(this.HOST+"/sys/admin/update",{
+                id:this.adminForm.id,
+                account:this.adminForm.account,
+                password:this.adminForm.password,
+                nickname:this.adminForm.nickname,
+                name:this.adminForm.name,
+                gender:this.adminForm.gender,
+                type:this.adminForm.type
+              }).then((response)=> {
+                this.dialogVisible=false;
+                this.request();
+              }).catch((error)=> {
+                console.log(error);
+              });
+            }
+          });
+        },
+        resetForm(formName) {
+          this.$refs[formName].resetFields();
+        },
           /*页面大小发生改变*/
         handleSizeChange(val) {
           this.pageSize=val;
-          this.request(1,val,this.user);
+          this.request(1,val,this.administrator);
         },
         /*当前页面发生改变*/
         handleCurrentChange(val) {
           console.log("当前页面大小"+this.pageSize);
           this.currentPage=val;
-          this.request(val,this.pageSize,this.user);
+          this.request(val,this.pageSize,this.administrator);
         },
         /*查询条件提交*/
         onSubmit() {
-          this.request(1,10,this.user)
+          this.request(1,10,this.administrator)
         },
         /*重置查询条件*/
         reset(){
-          this.user.gender='';
-          this.user.account='';
-          this.user.nickname='';
-          this.user.name='';
-          this.user.type='';
+          this.administrator.gender='';
+          this.administrator.nickname='';
+          this.administrator.name='';
+          this.administrator.type='';
         },
         /*打开添加弹框*/
         addDialog() {
-          const h = this.$createElement;
+          this.type='新建';
+          this.dialogVisible = true;
+          adminForm = null;
+          /*const h = this.$createElement;
           this.$msgbox({
             title: '添加用户',
             message: h('add', null),
@@ -180,7 +296,7 @@
               type: 'info',
               message: 'action: ' + action
             });
-          }).catch(() => {});
+          }).catch(() => {});*/
         },
         /*删除*/
         handleDelete(index,row){
@@ -195,10 +311,7 @@
                 adminId:row.id
               }
             }).then((response)=>{
-              this.$message({
-                type: 'success',
-                message: '删除成功!'
-              });
+              this.request();
             }).catch((error)=>{
               this.$message.error('删除失败!请稍后重试');
             });
@@ -211,32 +324,27 @@
         },
         /*编辑*/
         handleEdit(index,row){
-          axios.post(this.HOST+"/sys/admin/update",{
-
-          }).then((response)=>{
-            this.$message({
-              type: 'success',
-              message: '修改成功!'
-            });
-          });
+          alert("编辑");
+          this.adminForm = row;
+          this.dialogVisible = true;
+          this.type='编辑';
         },
         request(page,size,administrator) {
           axios.get(this.HOST + "/sys/admin/list", {
             params: {
-              page: page,
-              size: size,
-              account:administrator.account,
-              nickname:administrator.nickname,
-              name:administrator.name,
-              gender:administrator.gender,
-              type:administrator.type
+              page: this.currentPage,
+              size: this.pageSize,
+              gender:this.administrator.gender,
+              nickname:this.administrator.nickname,
+              name:this.administrator.name,
+              type:this.administrator.type,
             }
           }).then((response) => {
             console.log(response);
-            this.AdministratorList = response.data.content;
+            this.AdministratorList = response.data.list;
             console.log(this.AdministratorList);
-            this.currentPage = response.data.number+1;
-            this.total = response.data.totalElements;
+            this.currentPage = response.data.pageNum;
+            this.total = response.data.total;
           }).catch((error)=> {
             console.log(error);
           });
@@ -249,7 +357,7 @@
         },
         //类型
         formatType:function (row,column) {
-          return row.type == '0' ?'普通管理员':row.type=='1'?'超级管理员':'';
+          return row.type == '1' ?'普通管理员':row.type=='0'?'超级管理员':'';
         },
         //日期时间
         formateDateTime:function (row,colum) {
@@ -260,7 +368,7 @@
         }
       },
       mounted:function () {
-        console.log("adminInfo的ajax");
+
         /*使用箭头函数解决this的不指向vue,而不是undefined*/
        /* axios.get(this.HOST+"/sys/admin/list").then( (response)=> {
           console.log(response);

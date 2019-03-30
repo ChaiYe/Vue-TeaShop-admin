@@ -49,7 +49,7 @@ const SystemRouter = [{
     component:Permission,
     name:'权限'
   },{
-    path:'/system/add',
+    path:'/system/add/:id',
     component:Add,
     name:'添加'
   },{
@@ -60,7 +60,18 @@ const SystemRouter = [{
     path:'/system/slide',
     name:'轮播图',
     component:()=>import('@/view/Carousel')
+  }, {
+    path: '/system/dashboard',
+    name: '仪表盘',
+    component: () => import('@/view/Dashboard/index.vue')
+  },{
+    path:'/system/order',
+    name:'订单信息',
+    component:()=>import('@/view/Order/order.vue')
+
   }
+
+
   ]
   },
 ]

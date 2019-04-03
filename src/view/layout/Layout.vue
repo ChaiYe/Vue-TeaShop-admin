@@ -56,7 +56,7 @@
                   <i :class="item.iconCls"></i>
                 </div>
                 <ul class="el-menu submenu" :class="'submenu-hook-'+index" @mouseover="showMenu(index,true)" @mouseout="showMenu(index,false)">
-                  <li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px; color: #fff;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">
+                    <li v-for="child in item.children" v-if="!child.hidden" :key="child.path" class="el-menu-item" style="padding-left: 40px; color: #fff;" :class="$route.path==child.path?'is-active':''" @click="$router.push(child.path)">
                     {{child.name}}
                   </li>
                 </ul>
@@ -107,7 +107,10 @@
   }
 
   let initMenu = function() {
-    for(let i in this.$router.options.routes) {
+    console.log("路由数据");
+    console.log(this.$router.options.routes);
+    let ts = this.$router.options.routes.slice(0, 3);
+    for(let i in ts) {
       let root = this.$router.options.routes[i]
       if(root.hidden)
         continue

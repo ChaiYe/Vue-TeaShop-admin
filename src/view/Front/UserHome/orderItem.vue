@@ -5,7 +5,7 @@
           <el-row style="text-align: center;font-size: 32px;color: #ccc" v-if="orderList.length==0">
             没有数据
           </el-row>
-          <el-row  v-for="item  in  orderList" class="orderItem">
+          <el-row  v-for="item  in  orderList" class="orderItem" :key="item.id">
             <table border="0" width="100%" align="center">
               <tr>
                 <th>{{item.placeOrderTime|formatDateItem}}</th>

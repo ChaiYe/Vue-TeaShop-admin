@@ -6,8 +6,8 @@
          <i class="el-icon-third-team card-panel-icon"></i>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">访客</div>
-          <div class="card-panel-num">100</div>
+          <div class="card-panel-text">新会员</div>
+          <div class="card-panel-num">{{entity.registerNum}}</div>
         </div>
       </div>
     </el-col>
@@ -17,8 +17,8 @@
           <i class="el-icon-third-moneycollect card-panel-icon"></i>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">交易</div>
-         <div class="card-panel-num">200</div>
+          <div class="card-panel-text">交易额</div>
+         <div class="card-panel-num">{{entity.amount}}</div>
         </div>
       </div>
     </el-col>
@@ -29,7 +29,7 @@
         </div>
         <div class="card-panel-description">
           <div class="card-panel-text">购买</div>
-         <div class="card-panel-num">1000</div>
+         <div class="card-panel-num">{{entity.orderNum}}</div>
         </div>
       </div>
     </el-col>
@@ -39,8 +39,8 @@
           <i class="el-icon-third-message card-panel-icon"></i>
         </div>
         <div class="card-panel-description">
-          <div class="card-panel-text">消息</div>
-          <div class="card-panel-num">100</div>
+          <div class="card-panel-text">访客</div>
+          <div class="card-panel-num">{{entity.access}}</div>
         </div>
       </div>
     </el-col>
@@ -49,7 +49,31 @@
 
 <script>
     export default {
-        name: "GroupInfo"
+        name: "GroupInfo",
+      data(){
+        return{
+          entity:{
+            registerNum:null,
+            amount:null,
+            orderNum:null,
+            access:null
+          }
+        }
+      },
+      methods:{
+        queryMainData() {
+            this.$http.get(this.HOST + "/sys/statistical/statisMainData").then(res => {
+                  this.entity=res.data;
+                    console.log(res.data);
+                }).catch(err => {
+                      console.log(err);
+              });
+        }
+      },
+      mounted(){
+        this.queryMainData();
+      }
+
     }
 </script>
 

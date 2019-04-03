@@ -1,37 +1,25 @@
-import Main from '@/view/layout/Layout'
-import Contract from '@/components/system/Contract'
 import AdminInfo from '@/view/adminInfo'
-import  AdminAdd from '@/view/adminInfo/add'
 import UserInfo  from  '@/view/userInfo'
 import TeaTaste from '@/view/teaInfo/tea_taste'
 import Brand from '@/view/teaInfo/brand'
-import Echart  from '@/view/Dashboard/components/LineChart'
-import  Editor from '@/components/EditorDemo'
-import ImageUpload  from  '@/components/ImageUploadDemo'
-import  GroupInfo from '@/view/Dashboard'
 import Gategory from '@/view/Category'
 import LogInfo from '@/view/LogInfo'
 import  Permission from '@/view/system/permission'
 import Add from '@/view/teaInfo/product/add'
-import GoodList from '@/view/teaInfo/product/index.vue';
 
-const SystemRouter = [{
-  path: '/system',
+const SystemRouter = [
+ /* {
+  path: '/',
   name: '系统管理',
-  component: Main,
+  hidden: false,
+    component: () => import('@/view/layout/Layout'),
   iconCls: 'el-icon-third-desktop',
-  children: [{
+  children: [
+    {
     path: '/system/log',
     component: LogInfo,
-    name: '操作日志'
-  },{
-    path: '/system/adminInfo',
-    component: AdminInfo,
-    name: '管理员信息'
-  },{
-    path: '/system/userInfo',
-    component: UserInfo,
-    name: '用户信息'
+    name: '操作日志',
+      hidden: true,
   },{
     path:'/system/teataste',
     component:TeaTaste,
@@ -53,27 +41,49 @@ const SystemRouter = [{
     component:Add,
     name:'添加'
   },{
-    path:'/system/goodList',
-    name:'商品列表',
-    component:()=>import('@/view/teaInfo/product')
-  },{
-    path:'/system/slide',
+    path:'slide',
     name:'轮播图',
     component:()=>import('@/view/Carousel')
   }, {
     path: '/system/dashboard',
     name: '仪表盘',
-    component: () => import('@/view/Dashboard/index.vue')
+    component: () => import('../view/Dashboard/index.vue')
   },{
     path:'/system/order',
     name:'订单信息',
     component:()=>import('@/view/Order/order.vue')
-
   }
-
-
   ]
   },
+  {
+    path:'/system/goods',
+    name:'商品管理',
+    component:()=>import('@/view/teaInfo/product'),
+    iconCls: 'el-icon-third-desktop',
+    children:[
+      {
+        path:'/system/goodList',
+        name:'商品列表',
+        component:()=>import('@/view/teaInfo/product')
+      }
+    ]
+  },
+  {
+    path:'/system/users',
+    name:'用户管理',
+    iconCls: 'el-icon-third-desktop',
+    children:[
+      {
+        path: '/system/adminInfo',
+        component: AdminInfo,
+        name: '管理员信息'
+      },{
+        path: '/system/userInfo',
+        component: UserInfo,
+        name: '会员信息'
+      }
+    ]
+  }*/
 ]
 
 export {

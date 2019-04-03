@@ -3,17 +3,52 @@
     <Header></Header>
     <div class="wrapperItem">
       <div>
-        {{orderItem}}
-        <div v-if="addressList.length==0">请添加地址</div>
+        <div v-if="addressList.length==0">{{addressStatus}}</div>
+        <el-dialog :visible.sync="dialogVisible" :title="type">
+          {{address}}
+          <el-form ref="form" :model="address" label-width="80px">
+            <el-form-item label="收货人">
+              <el-input v-model="address.username" class="input" ></el-input>
+            </el-form-item>
+            <el-form-item label="手机号码" >
+              <el-input v-model="address.phoneNumber" class="input"></el-input>
+            </el-form-item>
+            <el-form-item label="所在地区">
+              <el-cascader
+                size="large"
+                :options="options"
+                v-model="address.selectedOptions"
+                filterable
+                change-on-select>
+              </el-cascader>
+            </el-form-item>
+            <el-form-item label="详细地址"  >
+              <el-input type="textarea" placeholder="详细地址" v-model="address.detail">
+              </el-input>
+            </el-form-item>
+            <el-form-item label="邮政编码" >
+              <el-input v-model="address.code"></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-checkbox v-model="address.checked">设为默认地址</el-checkbox>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="onSubmit" v-if="type=='新建'">保存</el-button>
+            </el-form-item>
+          </el-form>
+        </el-dialog>
         <el-row>
           <span class="settlementTitle">收货地址</span>
-
           <el-col :span="6"  v-if="addressList.length>0" v-for="entity in addressList" :key="entity.id">
-
             <div class="item addressItem" :class="{addressActive:entity.id==orderItem.selectAddress.id}" @click="selectAddressMethod(entity)">
               <h3 class="username"  >{{entity.consignee}}</h3>
               <p class="phoneNumber">{{entity.phoneNumber}}</p>
               <p class="address">{{entity.provinceName+" "+entity.cityName+" "+entity.areaName}}</p>
+            </div>
+          </el-col>
+          <el-col :span="6">
+            <div class="item" @click="showCreate()" style="display:flex;justify-content: center;align-items: center">
+              <i class="el-icon-third-plus-circle-fill" style="font-size: 48px;color: lightgray"></i>
             </div>
           </el-col>
         </el-row>
@@ -116,12 +151,26 @@
 </template>
 
 <script>
+  import { regionDataPlus } from 'element-china-area-data'
     import Header from  '@/view/Front/Header/header.vue'
     import  Footer  from  '@/view/Front/Footer/footer.vue'
     export default {
       name: "settlement",
       data(){
         return{
+          dialogVisible:false,
+          type:'新建',
+          address:{
+            id:"",
+            username:'贝壳',
+            phoneNumber:'152195712000',
+            selectedOptions: ["130000", "130200", "130203"],
+            detail:'黄埔街道',
+            code:'520033',
+            checked:true
+          },
+          options: regionDataPlus,
+          addressStatus: "加载地址中",
           addressList:[],
           orderItem:{
             orderdata:null,
@@ -133,25 +182,61 @@
         }
       },
       methods:{
+        showCreate(){
+          this.dialogVisible = true;
+          this.type='新建';
+        },
+        onSubmit:function () {
+          var  addressItem={
+            consignee:this.address.username,
+            phoneNumber:this.address.phoneNumber,
+            provinceId: this.address.selectedOptions[0],
+            cityId:this.address.selectedOptions[1],
+            areaId: this.address.selectedOptions[2],
+            detail:this.address.detail,
+            isDefaultAddr:this.address.checked,
+
+            zipCode:this.address.code
+          }
+          this.$http.post(this.HOST + "/sys/address/save", addressItem).then(res=>{
+            this.queryAddress();
+          }).catch(err=>{
+            console.log(err);
+          });
+          this.dialogVisible = false;
+        },
         selectAddressMethod(item){
           this.orderItem.selectAddress = item;
         },
         queryAddress(){
-          alert("获取地址");
          this.$http.get(this.HOST + "/sys/address/userAddress",this.orderItem).then( (res)=> {
-            console.log(res.data);
            this.addressList= res.data;
-           this.orderItem.selectAddress = this.addressList[0];
+           if (this.addressList.length > 0) {
+             this.orderItem.selectAddress = this.addressList[0];
+           }else{
+             this.addressStatus="请先添加地址"
+           }
+
+
           }).catch((err)=> {
             console.log(err);
           });
         },
         toPay(){
-          this.$http.post(this.HOST + "/sys/mainOrder/saveOrder",this.orderItem).then(res => {
-            this.$router.push({path:'/front/pay/'+res.data});
-          }).catch(err => {
-            console.log(err);
-          });
+          if (this.orderItem.selectAddress!=null) {
+            this.$http.post(this.HOST + "/sys/mainOrder/saveOrder",this.orderItem).then(res => {
+              /* this.$router.push({path:'/front/pay/'+res.data});*/
+              let routeData = this.$router.resolve({path:'/front/pay/'+res.data});
+              window.open(routeData.href, '_blank');
+            }).catch(err => {
+              console.log(err);
+            })}else{
+            this.$message({
+              type: 'info',
+              message: `您还没勾选地址,请选择地址后继续`
+            });
+          }
+
         },
         selectPayType(value) {
           this.payType = value;

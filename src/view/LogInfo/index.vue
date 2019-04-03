@@ -10,10 +10,6 @@
           <el-form-item>
             <el-input v-model="searchEntity.ip" placeholder="ip"></el-input>
           </el-form-item>
-          <el-form-item>
-            <el-input v-model="searchEntity.method" placeholder="方法"></el-input>
-          </el-form-item>
-
             <el-date-picker
               v-model="searchEntity.startTime"
               type="datetime"
@@ -165,5 +161,9 @@
 </script>
 
 <style scoped>
-
+  .header {
+    padding: 24px 12px;;
+    margin-bottom: 16px;
+    box-shadow: 1px 1px 4px lightgray;
+  }
 </style>

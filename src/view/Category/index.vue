@@ -40,7 +40,7 @@
       </div>
       {{add}}
     </el-dialog>
-    <div class="btn-group">
+    <div class="btn-group header">
       <el-button type="primary" icon="el-icon-edit" @click="showCreate">添加</el-button>
       <el-button type="primary" icon="el-icon-delete" @click="handleDelete">删除</el-button>
       <el-button type="primary" icon="el-icon-refresh" @click="search">刷新</el-button>
@@ -278,5 +278,9 @@
 </script>
 
 <style scoped>
-
+  .header {
+    padding: 24px 12px;;
+    margin-bottom: 16px;
+    box-shadow: 1px 1px 4px lightgray;
+  }
 </style>

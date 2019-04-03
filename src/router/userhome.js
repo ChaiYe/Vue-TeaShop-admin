@@ -6,8 +6,10 @@ const UserHomeRouter = [
     meta: {
       requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
     },
-      children:[{
-          path:'center',
+      children:[
+        {path: '/', redirect: 'center'},
+        {
+          path:'/front/userHome/center',
           component:()=>import('@/view/Front/UserHome/center.vue'),
           name:'用户中心',
           meta: {
@@ -41,7 +43,21 @@ const UserHomeRouter = [
         meta: {
           requireAuth: true,  // 添加该字段，表示进入这个路由是需要登录的
         },
-      }
+      },{
+        path:'/front/userHome/headCut',
+          component:()=>import('@/view/Front/UserHome/Setting/headCut.vue'),
+          name:'头像',
+          meta:{
+            requireAuth:true
+          }
+        },{
+          path:'/front/userHome/userInfo',
+          component:()=>import('@/view/Front/UserHome/Setting/userInfo.vue'),
+          name:'用户信息',
+          meta:{
+            requireAuth:true
+          }
+        }
       ],
   }
 ];

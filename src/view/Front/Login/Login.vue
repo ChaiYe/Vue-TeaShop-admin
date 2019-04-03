@@ -19,11 +19,11 @@
             </li>
             <li>
               <div id="captcha">
-                <Verify @success="verifySuccess" @error="alert('error')" :type="3" :showButton="false" :barSize="{width:'100%',height:'40px'}"></Verify>
+                <Verify @success="verifySuccess" @error="alert('error')" :type="3" :showButton="false" :barSize="{width:'100%',height:'40px'}" id="verfiy"></Verify>
               </div>
             </li>
             <li style="text-align: right" class="pr">
-              <a href="javascript:;" class="register" @click="toRegister">注册 TeaMall 账号</a>
+              <a href="javascript:;" class="register" @click="toRegister">注册 茶叶商城 账号</a>
               <a style="padding: 1px 0 0 10px" @click="open('找回密码','请联系管理员')">忘记密码 ?</a>
             </li>
             <li>
@@ -116,11 +116,15 @@ import Verify from 'vue2-verify'
             password: this.ruleForm.userPwd,
           }
           this.$http.post(this.HOST+"/sys/userLogin/login",params).then(res => {
-            console.log(res);
-            localStorage.setItem('token', res.data.data);
-            this.$router.push({
-              path: '/front'
-            });
+            if (res.data.code == 200) {
+              localStorage.setItem('token', res.data.data);
+              this.$router.push({
+                path: '/front'
+              })
+            }else{
+              this.$alert(res.data.msg);
+              this.logintxt = '登录';
+            }
           })
         }else{
           this.$message("请先验证验证码");

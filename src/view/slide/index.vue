@@ -269,5 +269,4 @@
     margin-bottom: nth($marginBottom, 2);
   }
 
-
 </style>

@@ -5,12 +5,11 @@
       <el-row type="flex" justify="center" align="middle">
        <el-col :span="6">
          <div >
-
            <img :src="userInfo.headPortrait" height="120" width="120" style="border-radius: 50%;border: 1px solid #e0e0e0;padding: 4px;" class="img" v-if="userInfo.headPortrait!=null"/>
            <img src="/static/img/photo.jpg" height="120" width="120" style="border-radius: 50%;border: 1px solid #e0e0e0;padding: 4px;" class="img" v-if="userInfo.headPortrait==null"/>
          </div>
        </el-col>
-        <el-col :span="6">
+        <el-col :span="6" :offset="1">
           <div class="xxLarger margin-bottom-1">{{userInfo.nickname}}</div>
           <div  class="fontColorLight xSmall margin-bottom-6">下午好~</div>
           <div><a href="#" class="xxSmall linkColor">修改个人信息<i class="el-icon-third-right"></i></a></div>

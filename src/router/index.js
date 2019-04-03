@@ -1,24 +1,100 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
+
+
+
+
+import AdminInfo from '@/view/adminInfo'
+import UserInfo  from  '@/view/userInfo'
+import TeaTaste from '@/view/teaInfo/tea_taste'
+import Brand from '@/view/teaInfo/brand'
+import Gategory from '@/view/Category'
+import LogInfo from '@/view/LogInfo'
+import  Permission from '@/view/system/permission'
+import Add from '@/view/teaInfo/product/add'
 Vue.use(Router)
 
 import Login from '@/view/login';
-import Dashboard from '@/components/Dashboard'
 import Main from '@/view/layout/Layout'
 
 
-let routes = [{
-  path:'/',
-  component: Main,
-  hidden: true,
-  children: [{
-    path: '/',
-    component:Dashboard,
-    name:'首页'
+let routes = [
+  {
+    path: '/system',
+    name: '系统管理',
+    component: () => import('@/view/layout/Layout'),
+    iconCls: 'el-icon-third-desktop',
+    children: [
+      {
+        path: '/',
+        component:() => import('../view/Dashboard/index.vue'),
+        name:'仪表盘'
+      },
+     {
+        path:'/slide',
+        name:'轮播图',
+        component:()=>import('@/view/Carousel'),
+      },{
+        path: '/system/log',
+        component: LogInfo,
+        name: '操作日志',
+      },{
+        path:'/system/order',
+        name:'订单信息',
+        component:()=>import('@/view/Order/order.vue'),
+
+      }
+    ]
   },
-  ]
-}
+  {
+    path:'/system/goods',
+    name:'商品管理',
+    component: () => import('@/view/layout/Layout'),
+    iconCls: 'el-icon-third-golden-fill',
+    children:[
+      {
+        path:'/system/goodList',
+        name:'商品列表',
+        component:()=>import('@/view/teaInfo/product'),
+      },{
+        path:'/system/add/:id',
+        component:Add,
+        name:'添加',
+      },{
+        path:'/system/gategory',
+        component:Gategory,
+        name:'分类',
+      },{
+        path:'/system/teataste',
+        component:TeaTaste,
+        name:'茶叶口味',
+      },{
+        path:'/system/Brand',
+        component:Brand,
+        name:'品牌',
+      }
+    ]
+  },
+  {
+    path:'/system/users',
+    name:'用户管理',
+    iconCls: 'el-icon-third-contacts',
+    component: () => import('@/view/layout/Layout'),
+    children:[
+      {
+        path: '/system/adminInfo',
+        component: AdminInfo,
+        name: '管理员信息',
+        iconCls: 'el-icon-third-desktop',
+      },{
+        path: '/system/userInfo',
+        component: UserInfo,
+        name: '会员信息',
+        iconCls: 'el-icon-third-desktop',
+      }
+    ]
+  }
   ,{
     path:'/adminlogin',
     component:Login,
@@ -70,19 +146,21 @@ let routes = [{
     path:'/front/userLogin',
     name:'用户登录',
     component:()=>import('@/view/Front/Login/Login.vue')
+  },
+  {
+    name: '404',
+    path: '/404',
+    component: () => import('@/view/ErrorPage/404.vue')
+  },
+  {
+    path: '*',    // 此处需特别注意至于最底部
+    redirect: '/404'
   }
-
 ]
 
-import {
-  SystemRouter
-} from './system'
 
 import {UserHomeRouter} from './userhome'
 
-for (let i in SystemRouter){
-  routes.push(SystemRouter[i])
-}
 for (let i in UserHomeRouter){
   routes.push(UserHomeRouter[i])
 }

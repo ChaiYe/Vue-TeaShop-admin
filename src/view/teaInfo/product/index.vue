@@ -1,31 +1,30 @@
 <template>
   <el-row>
-    <el-row :gutter="10" type="flex" justify="space-between">
-     <el-col :span="12">
-       <el-button type="primary" icon="el-icon-delete" @click="handleDelete">删除</el-button>
-       <el-button type="primary" icon="el-icon-download" @click="handleExport">导出</el-button>
-       <el-button type="primary" @click="putOnShelves">上架</el-button>
-       <el-button type="primary" @click="putDownShelves">下架</el-button>
-     </el-col>
-      <el-col :span="10">
-        <el-form  :model="searchEntity" style="display: flex;" class="form">
-          <el-form-item>
-            <el-input v-model="searchEntity.title" placeholder="标题" clearable></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-input v-model="searchEntity.brandName" placeholder="品牌" clearable></el-input>
-          </el-form-item>
-          <el-form-item>
-            <el-select v-model="searchEntity.type" placeholder="类型" clearable>
-              <el-option label="茶叶" value="1"></el-option>
-              <el-option label="茶具" value="0"></el-option>
-            </el-select>
-          </el-form-item>
-          <el-form-item>
-            <el-button type="primary" @click="search">查询</el-button>
-          </el-form-item>
-        </el-form>
-      </el-col>
+    <el-row class="header">
+      <el-row :gutter="10" type="flex" justify="space-between">
+        <el-col :span="12">
+          <el-button type="primary" icon="el-icon-delete" @click="handleDelete">删除</el-button>
+          <el-button type="primary" icon="el-icon-download" @click="handleExport">导出</el-button>
+          <el-button type="primary" @click="putOnShelves">上架</el-button>
+          <el-button type="primary" @click="putDownShelves">下架</el-button>
+        </el-col>
+        <el-col :span="10">
+          <el-form  :model="searchEntity" style="display: flex;" class="form">
+            <el-form-item>
+              <el-input v-model="searchEntity.title" placeholder="标题" clearable></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-select v-model="searchEntity.type" placeholder="类型" clearable>
+                <el-option label="茶叶" value="1"></el-option>
+                <el-option label="茶具" value="0"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="primary" @click="search">查询</el-button>
+            </el-form-item>
+          </el-form>
+        </el-col>
+      </el-row>
     </el-row>
     <el-row>
     <el-table border :data="tableData" :height="tableHeight" tooltip-effect="dark" ref="table" v-loading="loading" @selection-change="handleSelectionChange">
@@ -276,5 +275,13 @@
   }
   .form .el-form-item{
     margin-left: 10px;
+  }
+  .header {
+    padding: 24px 12px;;
+    margin-bottom: 16px;
+    box-shadow: 1px 1px 4px lightgray;
+  }
+  .pagination {
+    margin-top: 24px;
   }
 </style>

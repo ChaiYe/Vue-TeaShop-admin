@@ -1,13 +1,13 @@
 <template>
   <!--获取菜单数据-->
-  <div style="display: flex;z-index:1000" @mouseleave="hidden">
+  <div style="display: flex;z-index:1000;cursor: pointer" @mouseleave="hidden">
     <ul class="indexitem">
       <li href="#" v-for="(obj,key) in category"   @mouseenter="visible(obj)">
         {{obj.label}}
       </li>
     </ul>
     <ul v-show="context.length>0" class="indexitem">
-      <li v-for="(obj,key) in  context" style="background: #eee" @click="searchByTeaTeast(obj.value)">
+      <li v-for="(obj,key) in  context" class="subitemindex" @click="searchByTeaTeast(obj.value)">
         {{obj.label}}
       </li>
     </ul>
@@ -74,12 +74,22 @@
   li{
     cursor: pointer;
     line-height: 32px;
-    background: #f0f0f0;
+    background: #ffffff;
     padding: 12px;
     padding-left: 52px;
     width: 200px;
+    box-shadow: 1px 1px 1px 1px #ccc;
     &:hover{
-      background: #ebebeb;
+      background: #f2f2f2;
+    }
+    .subitemindex{
+      background: #fff;
+      &:hover{
+        background: #f2f2f2;
+        .subitemindex{
+          background: #f2f2f2;
+        }
+      }
     }
 }
 }

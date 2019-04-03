@@ -5,7 +5,7 @@
     </el-row>
     <el-row class="orderItem">
       <el-row :gutter="30">
-       <el-col :span="8" v-for="goods in collectionList">
+       <el-col :span="8" v-for="goods in collectionList" :key="goods.id">
          <el-card :body-style="{ padding: '0px' }">
            <img :src="goods[0].largerPic" class="image"  style="margin: 0 auto;width:200px;height: 200px">
            <div style="padding: 14px;">

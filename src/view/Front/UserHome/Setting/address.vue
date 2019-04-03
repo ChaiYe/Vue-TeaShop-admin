@@ -41,7 +41,7 @@
       <el-row :gutter="10" class="total">
         <el-col :span="6">
           <el-row class="item" type="flex" align="middle" justify="center" @click.native="showCreate">
-            <i class="el-icon-third-plus-circle-fill" style="font-size: 32px;color: lightgray"></i>
+            <i class="el-icon-third-plus-circle-fill" style="font-size: 48px;color: lightgray"></i>
           </el-row>
         </el-col>
         <el-col :span="6"  v-for="entity in entityList" :key="entity.id">
@@ -49,6 +49,7 @@
             <h3 class="username">{{entity.consignee}}</h3>
             <p class="phoneNumber">{{entity.phoneNumber}}</p>
             <p class="address">{{entity.provinceName+" "+entity.cityName+" "+entity.areaName+" "+entity.detail}}</p>
+            <div class="" v-if="entity.isDefaultAddr==1">默认地址</div>
             <div style="float: right;" class="operator">
               <span href="#" @click="showEdit(entity)">修改</span>
               <span href="#"  @click="removeItem(entity.id)">删除</span>
@@ -133,13 +134,6 @@
         this.dialogVisible = false;
       },
       showCreate(){
-        /*for (let addressKey in this.address) {
-          if(addressKey=="selectedOptions"){
-            this.address[addressKey] = [];
-          }else{
-            this.address[addressKey] = "";
-          }
-        }*/
         this.dialogVisible = true;
         this.type='新建';
       },

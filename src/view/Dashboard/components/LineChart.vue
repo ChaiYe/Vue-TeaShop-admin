@@ -1,34 +1,43 @@
 <template>
-  <ve-line :data="chartData"></ve-line>
+  <ve-histogram :data="chartData" :settings="chartSettings"></ve-histogram>
 </template>
 
 <script>
     export default {
         name: "EchartDemo",
       data: function () {
+        this.chartSettings = {
+          showLine: ['下单数量']
+        }
         return {
           chartData: {
-            columns: ['日期', '访问用户', '下单用户', '下单率'],
+            columns: ['日期', '下单数量'],
             rows: [
-              { '日期': '1/1', '访问用户': 1393, '下单用户': 1093, '下单率': 0.32 },
-              { '日期': '1/2', '访问用户': 3530, '下单用户': 3230, '下单率': 0.26 },
-              { '日期': '1/3', '访问用户': 2923, '下单用户': 2623, '下单率': 0.76 },
-              { '日期': '1/4', '访问用户': 1723, '下单用户': 1423, '下单率': 0.49 },
-              { '日期': '1/5', '访问用户': 3792, '下单用户': 3492, '下单率': 0.323 },
-              { '日期': '1/6', '访问用户': 4593, '下单用户': 4293, '下单率': 0.78 }
+             /* { '日期': '1/1',  '下单数量': 1093, },
+              { '日期': '1/2',  '下单数量': 3230, },
+              { '日期': '1/3',  '下单数量': 2623, },
+              { '日期': '1/4',  '下单数量': 1423, },
+              { '日期': '1/5',  '下单数量': 3492,  },
+              { '日期': '1/6',  '下单数量': 4293, }*/
             ]
           }
         }
       },
       methods:{
-          queryStatistical(){
-            this.$http.get(this.HOST+"/sys/statistical/statisticalData").then(res=>{
-              console.log(res.data);
-            }).catch(err=>{
-              console.log(err);
-            });
+
+      },
+      mounted(){
+        this.chartData.rows = this.statisData;
+      },
+      computed:{
+        statisData(){
+          let data=[];
+          for(var {'下单数量':num,'日期':date} of this.$store.state.statisData.statisData){
+            data.push({ '日期': date,'下单数量': num});
           }
-      }
+          return data;
+        }
+      },
     }
 </script>
 

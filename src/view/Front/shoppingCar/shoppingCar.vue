@@ -1,13 +1,12 @@
 <template>
   <div>
     <Header></Header>
-    {{shoppingCart}}
     <div>
     </div>
     <div style="margin: 42px 42px;border: 1px solid #ccc;border-radius: 1px;">
       <el-table :data="shoppingCart" ref="shoppingCart" @selection-change="count" style="border: 24px">
         <template slot="empty">
-          空空如也
+          <div v-if="shoppingCart.length==0" style="font-size:32px;text-align:center;color:#ccc">{{status}}</div>
         </template>
         <el-table-column
           type="selection"
@@ -66,7 +65,7 @@
         <el-table-column
           align="right">
           <template slot-scope="scope">
-            <el-button icon="el-icon-close" circle size="mini" @click="remove(scope.$index,shoppingCart)"></el-button>
+            <el-button icon="el-icon-close" circle size="mini" @click="remove(scope.$index,scope.row)"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -95,6 +94,7 @@ export default {
   name: 'HelloWorld',
   data () {
     return {
+      status:'数据加载中...',
       shoppingCart:[
 
       ],
@@ -107,6 +107,12 @@ export default {
       addDataMsg: 'AddDataMsg',
     }),
     remove(index,rows){
+      console.log(rows,index);
+        this.$http.get(this.HOST + "/sys/cart/deleteFormCart?itemId="+rows.goodsId).then(res => {
+          this.queryData();
+            }).catch(err => {
+                  console.log(err);
+          });
       rows.splice(index,1);
       this.count();
     },
@@ -134,16 +140,20 @@ export default {
     },
     handleSelectionChange(val) {
       this.multipleSelection = val;
+    },
+    queryData() {
+      this.$http.get(this.HOST+"/sys/cart/getCart",{withCredentials:true}).then(res=>{
+        this.shoppingCart=res.data.subOrderList;
+        if (this.shoppingCart.length == 0) {
+          this.status = "空空如也";
+        }
+      }).catch(err=>{
+        console.log(err);
+      });
     }
   },
   mounted:function () {
-    this.$http.get(this.HOST+"/sys/cart/getCart",{withCredentials:true}).then(res=>{
-      console.log("请求购物车数据回来");
-      console.log(res.data.subOrderList);
-      this.shoppingCart=res.data.subOrderList;
-    }).catch(err=>{
-      console.log(err);
-    });
+    this.queryData();
   },
   computed: {
   },

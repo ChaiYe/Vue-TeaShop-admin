@@ -90,7 +90,7 @@
                 {validator: validatePass2, trigger: 'blur'}
               ],
               verifyCode: [
-                { required: true, message: '请至少选择一个活动性质', trigger: 'blur' }
+                { required: true, message: '请输入验证码', trigger: 'blur' }
               ],
             }
           }
@@ -121,22 +121,38 @@
             else callback()
           },
           registered(){
-            this.$refs['entityForm'].validate((valid) => {
-              if (valid) {
-                if (this.checked) {
-                  this.$http.post(this.HOST+"/sys/user/registered",this.entity).catch((res) => {
-
-                  }).catch((err) => {
-                    console.log(err);
+            if (this.checked) {
+              this.$http.post(this.HOST+"/sys/user/registered",this.entity).then(res => {
+                console.log(res);
+              if(res.data==true){
+                this.$alert('注册成功即将跳转登录页面', '提示', {
+                  confirmButtonText: '确定',
+                  callback: action => {
+                    this.$router.push("/front/userLogin");
+                  }
+                });
+              }
+              if(res.data=='false'){
+                  this.$alert('验证码错误', '提示', {
+                    confirmButtonText: '确定',
+                    callback: action => {
+                    }
                   });
-                }else{
-                  this.$message("请先勾选同意百草商城协议");
                 }
+              }).catch((err) => {
+                console.log(err);
+              });
+            }else{
+              this.$message("请先勾选同意百草商城协议");
+            }
+          /*  this.$refs['entityForm'].validate((valid) => {
+              if (valid) {
+
               } else {
                 console.log('error submit!!');
                 return false;
               }
-            });
+            });*/
 
 
 

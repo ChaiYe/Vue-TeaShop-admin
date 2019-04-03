@@ -129,8 +129,15 @@ export default {
     /*添加至购物车*/
     addToCart(itemId){
       this.$http.get(this.HOST + "/sys/cart/addCart?itemId=" + itemId + "&num=" + this.num).then(res => {
-        alert("现已加入购物车,即将跳转");
-        this.$router.push("/front/shoppingCart");
+        this.$confirm('商品已添加至购物车, 跳转至订单或是继续购物?', '提示', {
+          confirmButtonText: '跳转',
+          cancelButtonText: '继续购物',
+          type: 'warning'
+        }).then(() => {
+          this.$router.push("/front/shoppingCart");
+        }).catch(() => {
+
+        });
       }).catch(err => {
         console.log(err);
       });

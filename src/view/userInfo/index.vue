@@ -5,32 +5,31 @@
         <el-form :inline="true" :model="user">
           <el-row justify="start">
             <el-form-item>
-              <el-input v-model="user.account" placeholder="账号"></el-input>
+              <el-input v-model="user.account" placeholder="账号" class="changeInput"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="user.nickname" placeholder="昵称"></el-input>
+              <el-input v-model="user.nickname" placeholder="昵称" class="changeInput"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="user.phoneNumber" placeholder="电话号码"></el-input>
+              <el-input v-model="user.phoneNumber" placeholder="电话号码" class="changeInput"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-input v-model="user.email" placeholder="邮箱"></el-input>
+              <el-input v-model="user.email" placeholder="邮箱" class="changeInput"></el-input>
             </el-form-item>
             <el-form-item>
-              <el-select v-model="user.state" placeholder="是否启用">
+              <el-select v-model="user.state" placeholder="是否启用" class="changeInput">
                 <el-option label="是" value="1"></el-option>
                 <el-option label="否" value="0"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
-              <el-select v-model="user.gender" placeholder="性别">
+              <el-select v-model="user.gender" placeholder="性别" class="changeInput">
                 <el-option label="男" value="1"></el-option>
                 <el-option label="女" value="2"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item>
               <el-button type="primary" @click="onSubmit">查询</el-button>
-              <el-button type="primary" @click="reset">重置</el-button>
             </el-form-item>
           </el-row>
         </el-form>
@@ -111,10 +110,6 @@
         </el-table-column>
         <el-table-column label="操作" width="150px">
           <template slot-scope="scope">
-            <el-button
-              size="mini"
-              @click="handleEdit(scope.$index, scope.row)">编辑
-            </el-button>
             <el-button
               size="mini"
               type="danger"
@@ -458,4 +453,8 @@
     margin-top: nth($marginTop, 2);
     margin-bottom: nth($marginBottom, 2);
   }
+  .changeInput{
+    width: 132px;
+  }
+
 </style>

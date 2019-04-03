@@ -54,8 +54,10 @@
         <el-input v-model="product.specifications" ></el-input>
       </el-form-item>
       <el-form-item label="类型">
-        <el-radio v-model="product.type" label="1" @change="requestBrandList">茶叶</el-radio>
-        <el-radio v-model="product.type" label="2" @change="requestBrandList">茶具</el-radio>
+        <el-radio-group v-model="product.type">
+        <el-radio  :label="1" @change="requestBrandList">茶叶</el-radio>
+        <el-radio :label="2" @change="requestBrandList">茶具</el-radio>
+        </el-radio-group>
       </el-form-item>
        <el-form-item label="品牌">
           <el-select
@@ -88,9 +90,9 @@
                      </el-form-item>
                      <el-form-item label="等级">
                        <el-select v-model="product.level">
-                         <el-option label="特级" value="1"></el-option>
-                         <el-option label="普通" value="2"></el-option>
-                         <el-option label="顶级" value="3"></el-option>
+                         <el-option label="普通" value="1"></el-option>
+                         <el-option label="顶级" value="2"></el-option>
+                         <el-option label="特级" value="3"></el-option>
                        </el-select>
                      </el-form-item>
                      <el-form-item label="存储方法">
@@ -110,8 +112,9 @@
        </el-collapse-transition>
        <el-form-item label="图片">
           <el-upload
-              action="api/sys/upload"
+              action="/api/sys/upload"
             list-type="picture-card"
+              :file-list="product.largerPics"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
               :on-change="handleSuccess"
@@ -123,20 +126,22 @@
           </el-dialog>
         </el-form-item>
        <el-form-item label="状态">
-         <el-radio v-model="product.state" label="1">上架</el-radio>
-         <el-radio v-model="product.state" label="2">下架</el-radio>
+         <el-radio-group v-model="product.state">
+         <el-radio  :label="1">上架</el-radio>
+         <el-radio  :label="2">下架</el-radio>
+         </el-radio-group>
        </el-form-item>
        <el-form-item label="详细">
          <div>
            <quill-editor
              ref="newEditor"
              :options="newOption"
-             style="height: 200px; margin-bottom: 54px"
+             style="height: 500px; margin-bottom: 54px"
              v-model="product.detailed"
              @change="editorChange">
            </quill-editor>
            <form action="" method="post" enctype="multipart/form-data" id="uploadFormMulti">
-             <input style="display: none" :id="uniqueId" type="file" name="avator" multiple accept="image/jpg,image/jpeg,image/png,image/gif" @change="uploadImg('uploadFormMulti')">&lt;!&ndash;style="display: none"&ndash;&gt;
+             <input style="display: none" :id="uniqueId" type="file" name="avator" multiple accept="image/jpg,image/jpeg,image/png,image/gif" @change="uploadImg('uploadFormMulti')">
            </form>
          </div>
        </el-form-item>
@@ -145,7 +150,6 @@
               <el-button>取消</el-button>
             </el-form-item>
     </el-form>
-    {{this.product}}}
   </section>
 </template>
 
@@ -168,22 +172,22 @@
            "subTitle": "库存告急，卖完售罄",
             "marketPrice": 500,
             "salePrice": 500,
-            "salesPromotionIds":null,
+            "salesPromotionIds":[1,2],
             "brandId": 20,
             "netContent": "50克",
-            "inventory": null,
-            "specifications": null,
+            "inventory": 5000,
+            "specifications": "12cm*12cm",
             "shelflife": "12月",
             "origin": "武夷山",
-            "process": null,
+            "process": "热炒",
             "level": "特级",
             "scLicence": "QS3505 1401 1652",
             "storageMethods": "密封防晒、防异味、冷藏为宜",
             "packingSpecification": "长36.7*宽15.1*高7.2cm",
             "material": null,
             "applicableScenario": null,
-            "detailed": null,
-            "largerPics": null,
+            "detailed": "<p><img src=\"http://192.168.12.131/group1/M00/00/02/wKgMg1yhyXWAId2CAAA31BT1dPI797.jpg\" width=\"400px\"></p><p>测试用例</p>",
+            "largerPics":[{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}],
             "thumbnailPic": null,
             "session":"春",
             "freight": 12,
@@ -236,7 +240,16 @@
         save() {
           this.$http.post(this.HOST+"/sys/goods/save",this.product).then(function (res) {
             console.log(res);
-            this.product = {};
+            if(res.data==true){
+              this.$message({
+                type: 'info',
+                message: `添加成功`
+              });
+              this.product = {};
+            }else{
+              alert(res.data);
+            }
+
           }).catch(function (error) {
             console.log(error);
           })
@@ -364,7 +377,7 @@
         let id = this.$route.params.id;
         if (id != ':id') {
           this.$http.get(this.HOST + "/sys/goods/getGoods?goodsId=" + id).then(res=>{
-
+            console.log("商品数据返回");
             console.log(res.data);
             this.product=res.data;
             }).catch(err=>{
